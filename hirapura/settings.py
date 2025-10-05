@@ -21,7 +21,7 @@ from pathlib import Path
 
 # Read from .env file
 TWO_FACTOR_API_KEY = config("TWO_FACTOR_API_KEY")
-print("2Factor API Key:", TWO_FACTOR_API_KEY)
+# print("2Factor API Key:", TWO_FACTOR_API_KEY)
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -30,12 +30,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p8829f1@cv9lrz^aumk97(dcb_4h@74ib3ou=trw1e!q8*^okx'
 
+SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # for now; we will restrict to your domain later
+DEBUG = False           # in production
 
 
 # Application definition
@@ -127,7 +126,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
+
+# This is where collectstatic will collect all files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Optional: if you also have extra static dirs in development
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
