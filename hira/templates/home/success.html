@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+    <meta charset="UTF-8">
+    <title>Booking Success - HIRAPURA</title>
+    <style>
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #fdfbfb, #c9e9ff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #2e7d32;
+        }
+        p {
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🎉 Booking Successful 🎉</h1>
+        <p>તમારી હાજરી નોંધાઈ ગઈ છે!</p>
+        <p>📅 Date: {{ event.date }}</p>
+        <p>🕔 Time: {{ event.time }}</p>
+        <p>📍 Place: {{ event.place }}</p>
+        <p>સંપર્ક: {{ event.admin_name }} ({{ event.admin_phone }})</p>
+    </div>
+</body>
+</html>
