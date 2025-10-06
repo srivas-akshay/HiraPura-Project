@@ -23,14 +23,16 @@ def hash_otp(plain):
 # SEND OTP VIA 2FACTOR API
 # -------------------------------
 def send_otp_via_2factor(phone, otp):
+    """
+    Send OTP via 2Factor SMS using approved template.
+    """
     api_key = getattr(settings, "TWO_FACTOR_API_KEY", None)
     if not api_key:
         return {"Status": "Error", "Details": "API key not configured."}
 
-    # Use SMS endpoint with your approved template
-    template_name = "HiraPuraLogin"
+    template_name = "HiraPuraLogin"  # Your approved template
     url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{template_name}"
-    
+
     try:
         r = requests.get(url, timeout=10)
         return r.json()
@@ -71,7 +73,7 @@ def record_send_otp(phone):
 # -------------------------------
 def create_and_dispatch_otp(contact: Contact):
     """
-    Create OTP record for Contact and send via 2factor API.
+    Create OTP record for Contact and send via SMS.
     Marks all previous unused OTPs as used.
     """
     # Mark old OTPs as used
@@ -88,9 +90,15 @@ def create_and_dispatch_otp(contact: Contact):
         expires_at=expires_at
     )
 
-    # Send OTP via SMS
-    resp = send_otp_via_2factor(contact.whatsapp_no, otp_plain)
+    # Send OTP via SMS (use contact.phone_no, not WhatsApp)
+    phone_number = getattr(contact, "phone_no", None)
+    if not phone_number:
+        otp_obj.delete()
+        return False, "Phone number not available for SMS"
+
+    resp = send_otp_via_2factor(phone_number, otp_plain)
     if resp.get("Status") == "Success":
+        record_send_otp(phone_number)
         return True, "OTP sent successfully!"
     else:
         otp_obj.delete()
