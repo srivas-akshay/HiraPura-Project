@@ -27,12 +27,14 @@ def send_otp_via_sms(phone, otp):
     if not api_key:
         return {"Status": "Error", "Details": "API key not configured."}
 
-    template_name = "HiraPuraLogin"
-    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{template_name}/OTP"
-    
+    template_name = "HiraPuraLogin"  # your approved SMS template
+    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{otp}/{template_name}"
+
     try:
-        r = requests.get(url, timeout=10)
-        return r.json()
+        response = requests.get(url, timeout=10)
+        data = response.json()
+        print("2Factor Response:", data)  # optional debug log
+        return data
     except Exception as e:
         return {"Status": "Error", "Details": str(e)}
 
@@ -77,7 +79,7 @@ def create_and_dispatch_otp(contact: Contact):
     PhoneOTP.objects.filter(contact=contact, used=False).update(used=True)
 
     # Generate new OTP
-    otp_plain = generate_otp_code(6)
+    otp_plain = generate_otp_code(4)  # 4-digit OTP to match template
     hashed = hash_otp(otp_plain)
     expires_at = timezone.now() + timedelta(seconds=getattr(settings, "OTP_EXPIRY_SECONDS", 300))
 
@@ -93,6 +95,7 @@ def create_and_dispatch_otp(contact: Contact):
         otp_obj.delete()
         return False, "Phone number not available for SMS"
 
+    # Send OTP
     resp = send_otp_via_sms(phone_number, otp_plain)
     if resp.get("Status") == "Success":
         record_send_otp(phone_number)
