@@ -11,7 +11,7 @@ from .models import PhoneOTP, Contact
 # -------------------------------
 # OTP GENERATION & HASHING
 # -------------------------------
-def generate_otp_code(length=6):
+def generate_otp_code(length=4):
     """Generate numeric OTP of given length."""
     return ''.join(str(secrets.randbelow(10)) for _ in range(length))
 
@@ -23,20 +23,16 @@ def hash_otp(plain):
 # SEND OTP VIA SMS
 # -------------------------------
 def send_otp_via_sms(phone, otp):
-    """
-    Sends OTP via 2Factor SMS endpoint (numeric OTP, SMS only).
-    Returns dict with Status and Details.
-    """
     api_key = getattr(settings, "TWO_FACTOR_API_KEY", None)
     if not api_key:
         return {"Status": "Error", "Details": "API key not configured."}
 
-    # Use the AUTOGEN endpoint to always generate numeric OTP
-    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{otp}/AUTOGEN"
-
+    template_name = "HiraPuraLogin"
+    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{template_name}/OTP"
+    
     try:
-        response = requests.get(url, timeout=10)
-        return response.json()
+        r = requests.get(url, timeout=10)
+        return r.json()
     except Exception as e:
         return {"Status": "Error", "Details": str(e)}
 
