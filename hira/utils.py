@@ -27,16 +27,14 @@ def send_otp_via_2factor(phone, otp):
     if not api_key:
         return {"Status": "Error", "Details": "API key not configured."}
 
-    # SMS endpoint with template
-    template_name = "HiraPuraLogin"  # your approved SMS template name in 2Factor
-    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{template_name}"
+    # SMS endpoint (numeric OTP)
+    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{otp}/AUTOGEN"
 
     try:
         r = requests.get(url, timeout=10)
         return r.json()
     except Exception as e:
         return {"Status": "Error", "Details": str(e)}
-
 
 # -------------------------------
 # RATE LIMIT CHECK
