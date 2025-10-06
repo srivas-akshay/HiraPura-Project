@@ -84,8 +84,11 @@ def login_view(request):
                 show_otp = True
                 form = PhoneLoginForm(initial={"phone": phone})
 
-    return render(request, "home/HiraPuraLogin.html", {"form": form, "show_otp": show_otp, "phone": phone})
-
+    return render(request, "home/login.html", {
+                            "form": form,
+                            "show_otp": show_otp,
+                            "phone": phone
+                         })
 
 
 

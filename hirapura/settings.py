@@ -63,13 +63,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'hirapura.urls'
+
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
+        'DIRS': [],  # optional: can include BASE_DIR / "templates" if you want
+        'APP_DIRS': True,  # important: looks inside app/templates/
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -80,8 +80,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'hirapura.wsgi.application'
+# URL config
+ROOT_URLCONF = 'hirapura.urls'
 
+WSGI_APPLICATION = 'hirapura.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

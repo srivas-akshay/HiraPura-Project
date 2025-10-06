@@ -23,23 +23,20 @@ def hash_otp(plain):
 # SEND OTP VIA 2FACTOR API
 # -------------------------------
 def send_otp_via_2factor(phone, otp):
-    """
-    Send OTP via 2Factor SMS using approved template.
-    """
     api_key = getattr(settings, "TWO_FACTOR_API_KEY", None)
     if not api_key:
         return {"Status": "Error", "Details": "API key not configured."}
 
-    # template_name = "HiraPuraLogin"  # Your approved template
-    # url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{template_name}"
-    template_name = "HiraPuraLogin"  # your approved template name
-    url = f"https://2factor.in/API/V1/{api_key}/SMS/+91{phone}/TEMPLATE/{template_name}"
+    # SMS endpoint with template
+    template_name = "HiraPuraLogin"  # your approved SMS template name in 2Factor
+    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{template_name}"
 
     try:
         r = requests.get(url, timeout=10)
         return r.json()
     except Exception as e:
         return {"Status": "Error", "Details": str(e)}
+
 
 # -------------------------------
 # RATE LIMIT CHECK
