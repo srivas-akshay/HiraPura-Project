@@ -33,12 +33,12 @@ def login_view(request):
                 contact = Contact.objects.get(whatsapp_no=phone)
             except Contact.DoesNotExist:
                 messages.error(request, "This number is not registered.")
-                return render(request, "home/HiraPuraLogin.html", {"form": form, "show_otp": False})
+                return render(request, "home/login.html", {"form": form, "show_otp": False})
 
             ok, msg = can_send_otp(phone)
             if not ok:
                 messages.error(request, msg)
-                return render(request, "home/HiraPuraLogin.html", {"form": form, "show_otp": False})
+                return render(request, "home/login.html", {"form": form, "show_otp": False})
 
             success, info = create_and_dispatch_otp(contact)
             if success:
