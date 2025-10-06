@@ -20,19 +20,23 @@ def hash_otp(plain):
     return hashlib.sha256(plain.encode()).hexdigest()
 
 # -------------------------------
-# SEND OTP VIA 2FACTOR API
+# SEND OTP VIA SMS
 # -------------------------------
-def send_otp_via_2factor(phone, otp):
+def send_otp_via_sms(phone, otp):
+    """
+    Sends OTP via 2Factor SMS endpoint (numeric OTP, SMS only).
+    Returns dict with Status and Details.
+    """
     api_key = getattr(settings, "TWO_FACTOR_API_KEY", None)
     if not api_key:
         return {"Status": "Error", "Details": "API key not configured."}
 
-    # SMS endpoint (numeric OTP)
+    # Use the AUTOGEN endpoint to always generate numeric OTP
     url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{otp}/AUTOGEN"
 
     try:
-        r = requests.get(url, timeout=10)
-        return r.json()
+        response = requests.get(url, timeout=10)
+        return response.json()
     except Exception as e:
         return {"Status": "Error", "Details": str(e)}
 
@@ -87,13 +91,13 @@ def create_and_dispatch_otp(contact: Contact):
         expires_at=expires_at
     )
 
-    # Send OTP via SMS (use contact.phone_no, not WhatsApp)
-    phone_number = getattr(contact, "phone_no", None)
+    # Use phone number field for SMS
+    phone_number = contact.whatsapp_no or contact.alternate_no
     if not phone_number:
         otp_obj.delete()
         return False, "Phone number not available for SMS"
 
-    resp = send_otp_via_2factor(phone_number, otp_plain)
+    resp = send_otp_via_sms(phone_number, otp_plain)
     if resp.get("Status") == "Success":
         record_send_otp(phone_number)
         return True, "OTP sent successfully!"
