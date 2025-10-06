@@ -27,7 +27,10 @@ def send_otp_via_2factor(phone, otp):
     if not api_key:
         return {"Status": "Error", "Details": "API key not configured."}
 
-    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{otp}/OTP1"
+    # Use SMS endpoint with your approved template
+    template_name = "HiraPuraLogin"
+    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{template_name}"
+    
     try:
         r = requests.get(url, timeout=10)
         return r.json()
