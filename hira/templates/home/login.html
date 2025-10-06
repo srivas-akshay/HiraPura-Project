@@ -7,7 +7,6 @@
   <title>HIRA PURA - Login</title>
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
   <style>
-    /* your existing styles remain the same */
     :root {
       --accent-start: #ff9933;
       --accent-end:   #138808;
@@ -92,7 +91,6 @@
     <p>To attend the welcome gathering in Hirapura village, please log in with your phone number.</p>
 
     {% if not show_otp %}
-    <!-- STEP 1: Phone input -->
     <form method="post" autocomplete="off">
       {% csrf_token %}
       <input type="hidden" name="action" value="send_otp">
@@ -102,7 +100,6 @@
     {% endif %}
 
     {% if show_otp %}
-    <!-- STEP 2: OTP verification -->
     <form method="post" autocomplete="off">
       {% csrf_token %}
       <input type="hidden" name="action" value="verify_otp">

@@ -25,19 +25,20 @@ def login_view(request):
         action = request.POST.get("action")
         phone = request.POST.get("phone", "").strip()
 
+        # -------------------------
         # STEP 1: Send OTP
+        # -------------------------
         if action == "send_otp":
-            
             try:
                 contact = Contact.objects.get(whatsapp_no=phone)
             except Contact.DoesNotExist:
                 messages.error(request, "This number is not registered.")
-                return render(request, "home/login.html", {"form": form, "show_otp": False})
+                return render(request, "home/HiraPuraLogin.html", {"form": form, "show_otp": False})
 
             ok, msg = can_send_otp(phone)
             if not ok:
                 messages.error(request, msg)
-                return render(request, "home/login.html", {"form": form, "show_otp": False})
+                return render(request, "home/HiraPuraLogin.html", {"form": form, "show_otp": False})
 
             success, info = create_and_dispatch_otp(contact)
             if success:
@@ -49,7 +50,9 @@ def login_view(request):
             else:
                 messages.error(request, f"Failed to send OTP: {info}")
 
+        # -------------------------
         # STEP 2: Verify OTP
+        # -------------------------
         elif action == "verify_otp":
             otp_entered = request.POST.get("otp", "").strip()
             contact_id = request.session.get("otp_contact_id")
@@ -72,7 +75,6 @@ def login_view(request):
             if otp_obj.check_otp(otp_entered):
                 otp_obj.mark_used()
                 messages.success(request, f"Welcome {contact.full_name}!")
-                # redirect to user details page after successful OTP
                 return redirect("details", phone=contact.whatsapp_no)
             else:
                 otp_obj.attempts += 1
@@ -82,7 +84,11 @@ def login_view(request):
                 show_otp = True
                 form = PhoneLoginForm(initial={"phone": phone})
 
-    return render(request, "home/login.html", {"form": form, "show_otp": show_otp, "phone": phone})
+    return render(request, "home/HiraPuraLogin.html", {"form": form, "show_otp": show_otp, "phone": phone})
+
+
+
+
 
 # -------------------------------
 # USER DETAILS & BOOKING VIEW
