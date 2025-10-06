@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from decouple import config
 load_dotenv()
@@ -127,16 +128,27 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = '/static/'
+# # Static files (CSS, JavaScript, Images)
+# STATIC_URL = '/static/'
 
-# This is where collectstatic will collect all files
+# # This is where collectstatic will collect all files
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# # Optional: if you also have extra static dirs in development
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+# ]
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Optional: if you also have extra static dirs in development
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
