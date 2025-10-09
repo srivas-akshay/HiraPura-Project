@@ -1,209 +1,249 @@
+
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="gu">
-<head>
-    <meta charset="UTF-8">
-    <title>User Details - HIRA PURA</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Gujarati&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
-    <style>
-        /* 🔥 Background same as login page */
-        body {
-            font-family: 'Noto Sans Gujarati', 'Rajdhani', sans-serif;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); 
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            margin: 0;
-            min-height: 100vh;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
 
-        /* 🔥 Glassmorphism Card */
-        .card {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 25px;
-            width: 100%;
-            max-width: 1000px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow: 0px 10px 25px rgba(0,0,0,0.3);
-        }
+{% block title %}Pre Event Feedback{% endblock %}
 
+{% block content %}
+<style>
+    /* 🔥 Background Gradient Animation */
+    body {
+        font-family: 'Noto Sans Gujarati', 'Rajdhani', sans-serif;
+        background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); 
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        margin: 0;
+        padding: 20px;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* 🔥 Glassmorphism Card */
+    .card {
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 20px;
+        padding: 25px;
+        max-width: 1000px;
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        box-shadow: 0px 10px 25px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    /* Top section flex */
+    .top-section {
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .details, .invitation {
+        flex: 1;
+        min-width: 280px;
+    }
+
+    .username {
+        font-size: 26px;
+        font-weight: bold;
+        color: #fff;
+        margin-bottom: 20px;
+        text-align: center;
+        border-bottom: 2px solid rgba(255,255,255,0.3);
+        padding-bottom: 10px;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .detail-item {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.3);
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .detail-label {
+        font-size: 13px;
+        opacity: 0.9;
+        margin-bottom: 4px;
+    }
+
+    .detail-value {
+        font-size: 16px;
+        font-weight: bold;
+        word-break: break-word;
+    }
+
+    .invitation img {
+        max-width: 100%;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: transform 0.3s;
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.4);
+    }
+
+    .invitation img:hover {
+        transform: scale(1.05);
+    }
+
+    .note {
+        font-size: 13px;
+        margin-top: 6px;
+        opacity: 0.9;
+        text-align: center;
+    }
+
+    /* Attendance Form */
+    form {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+
+    input[type="number"] {
+        padding: 14px;
+        border-radius: 30px;
+        border: 1px solid rgba(255,255,255,0.4);
+        width: 90%;
+        max-width: 400px;
+        font-size: 16px;
+        background: rgba(255,255,255,0.2);
+        color: #fff;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    input[type="number"]::placeholder {
+        color: rgba(255,255,255,0.7);
+    }
+
+    .btn {
+        background: linear-gradient(90deg, #ff9933, #138808);
+        color: #fff;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 90%;
+        max-width: 400px;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: linear-gradient(90deg, #e68a00, #0f6605);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
         .top-section {
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
-        .details {
-            flex: 1;
-            min-width: 300px;
-        }
-        .username {
-            font-size: 28px;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 20px;
-            text-align: center;
-            border-bottom: 2px solid rgba(255,255,255,0.3);
-            padding-bottom: 10px;
+            flex-direction: column;
+            align-items: center;
         }
         .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: 1fr;
         }
-        .detail-item {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.3);
-            color: #fff;
+        .username {
+            font-size: 24px;
+        }
+        input[type="number"], .btn {
+            width: 95%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        body {
+            padding: 10px;
+        }
+        .username {
+            font-size: 22px;
         }
         .detail-label {
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 12px;
         }
         .detail-value {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .invitation {
-            flex: 1;
-            min-width: 300px;
-            text-align: center;
-            color: #fff;
-        }
-        .invitation img {
-            max-width: 90%;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.4);
-        }
-        .invitation img:hover {
-            transform: scale(1.05);
-        }
-        .note {
             font-size: 14px;
-            margin-top: 8px;
-            opacity: 0.9;
         }
+    }
+</style>
 
-        form {
-            margin-top: 30px;
-            text-align: center;
-        }
-        label {
-            font-weight: bold;
-            color: #fff;
-            display: block;
-            margin-bottom: 8px;
-        }
-        input[type="number"] {
-            padding: 14px;
-            border-radius: 30px;
-            border: 1px solid rgba(255,255,255,0.4);
-            width: 70%;
-            font-size: 16px;
-            margin: 12px 0;
-            background: rgba(255,255,255,0.2);
-            color: #fff;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-        input[type="number"]::placeholder {
-            color: rgba(255,255,255,0.7);
-        }
-        .btn {
-            background: linear-gradient(90deg, #ff9933, #138808);
-            color: #fff;
-            padding: 14px 20px;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
-            width: 70%;
-        }
-        .btn:hover {
-            background: linear-gradient(90deg, #e68a00, #0f6605);
-        }
+<div class="card">
 
-        /* ✅ Responsive Fix */
-        @media (min-width: 1025px) {
-            .top-section {
-                flex-direction: row;
-            }
-        }
-        @media (max-width: 1024px) {
-            .top-section {
-                flex-direction: column;
-                align-items: center;
-            }
-            .details, .invitation {
-                width: 100%;
-                max-width: 600px;
-            }
-            .invitation {
-                margin-top: 20px;
-            }
-            .detail-grid {
-                grid-template-columns: 1fr;
-            }
-            input[type="number"], .btn {
-                width: 90%;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-
-        <!-- 🔝 Top Section -->
-        <div class="top-section">
-            <!-- 🎉 User Details -->
-            <div class="details">
-                <div class="username">🙏 નમસ્તે {{ contact.full_name }}</div>
-                <div class="detail-grid">
-                    <div class="detail-item"><div class="detail-label">📌 શાખ (Sub Cast)</div><div class="detail-value">{{ contact.sub_cast }}</div></div>
-                    
-                    <div class="detail-item"><div class="detail-label">🌍 વિસ્તાર (Area)</div><div class="detail-value">{{ contact.area }}</div></div>
-                    <div class="detail-item"><div class="detail-label">🗺️ ઝોન (Zone)</div><div class="detail-value">{{ contact.zone }}</div></div>
-                    <div class="detail-item"><div class="detail-label">📱 વોટ્સએપ નંબર</div><div class="detail-value">{{ contact.whatsapp_no }}</div></div>
-                    <div class="detail-item"><div class="detail-label">☎️ વૈકલ્પિક નંબર</div><div class="detail-value">{{ contact.alternate_no }}</div></div>
-                    <div class="detail-item"><div class="detail-label">👨‍👩‍👧 કુટુંબના સભ્યો</div><div class="detail-value">{{ contact.family_members }}</div></div>
-                    <div class="detail-item"><div class="detail-label">📧 ઈમેઈલ</div><div class="detail-value">{{ contact.email }}</div></div>
+    <!-- Top Section -->
+    <div class="top-section">
+        <!-- User Details -->
+        <div class="details">
+            <div class="username">🙏 નમસ્તે {{ contact.full_name }}</div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">📌 શાખ (Sub Cast)</div>
+                    <div class="detail-value">{{ contact.sub_cast }}</div>
                 </div>
-            </div>
-
-            <!-- 🎟️ Invitation -->
-            <div class="invitation">
-                <h2>🎉 આમંત્રણ પત્ર</h2>
-                <a href="{% static 'home/HirapuraPatrika.pdf' %}" download>
-                    <img src="{% static 'home/Invitation.png' %}" alt="Invitation Banner">
-                </a>
-                <div class="note">👉 ચિત્ર પર ક્લિક કરીને PDF ડાઉનલોડ કરો</div>
+                <div class="detail-item">
+                    <div class="detail-label">🌍 વિસ્તાર (Area)</div>
+                    <div class="detail-value">{{ contact.area }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">🗺️ ઝોન (Zone)</div>
+                    <div class="detail-value">{{ contact.zone }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">📱 વોટ્સએપ નંબર</div>
+                    <div class="detail-value">{{ contact.whatsapp_no }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">☎️ વૈકલ્પિક નંબર</div>
+                    <div class="detail-value">{{ contact.alternate_no }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">👨‍👩‍👧 કુટુંબના સભ્યો</div>
+                    <div class="detail-value">{{ contact.family_members }}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">📧 ઈમેઈલ</div>
+                    <div class="detail-value">{{ contact.email }}</div>
+                </div>
             </div>
         </div>
 
-        <!-- 📝 Attendance Form -->
-        <form method="post">
-            {% csrf_token %}
-            <label for="num_people">✨ કેટલા લોકો આવવાના છે? (How many people are coming?)</label>
-            <input type="number" id="num_people" name="num_people" placeholder="Enter number" min="1" max="10" required>
-            <br>
-            <button type="submit" class="btn">✔️ હાજરી મોકલો</button>
-        </form>
+        <!-- Invitation Section -->
+        <div class="invitation">
+            <h2>🎉 આમંત્રણ પત્ર</h2>
+            <a href="{% static 'home/HirapuraPatrika.pdf' %}" download>
+                <img src="{% static 'home/Invitation.png' %}" alt="Invitation Banner">
+            </a>
+            <div class="note">👉 ચિત્ર પર ક્લિક કરીને PDF ડાઉનલોડ કરો</div>
+        </div>
     </div>
-</body>
-</html>
+
+    <!-- Attendance Form -->
+    <form method="post">
+        {% csrf_token %}
+        <label for="num_people">✨ કેટલા લોકો આવવાના છે? (How many people are coming?)</label>
+        <input type="number" id="num_people" name="num_people" placeholder="Enter number" min="1" max="10" required>
+        <button type="submit" class="btn">✔️ હાજરી મોકલો</button>
+    </form>
+
+</div>
+{% endblock %}

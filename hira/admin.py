@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import AdminSite
 from django.contrib.auth.models import User, Group
-from .models import Contact, Event, Booking
+from .models import Contact, Event, Booking,PreEventFeedback, PostEventFeedback
 
 # ===========================
 # Custom AdminSite
@@ -89,3 +89,29 @@ class BookingAdmin(admin.ModelAdmin):
     )
 
 hirapura_admin.register(Booking, BookingAdmin)
+
+
+
+@admin.register(PreEventFeedback)
+class PreEventFeedbackAdmin(admin.ModelAdmin):
+    list_display = ("id", "contact", "event", "will_attend", "expected_experience_rating", "submitted_at", "reviewed")
+    list_filter = ("event", "will_attend", "reviewed")
+    search_fields = ("contact__full_name", "contact__whatsapp_no", "expectations", "concerns")
+    readonly_fields = ("submitted_at",)
+    actions = ("mark_reviewed",)
+
+    def mark_reviewed(self, request, queryset):
+        queryset.update(reviewed=True)
+    mark_reviewed.short_description = "Mark selected as reviewed"
+
+@admin.register(PostEventFeedback)
+class PostEventFeedbackAdmin(admin.ModelAdmin):
+    list_display = ("id", "contact", "event", "overall_rating", "attended", "submitted_at", "reviewed")
+    list_filter = ("event", "attended", "reviewed")
+    search_fields = ("contact__full_name", "contact__whatsapp_no", "highlights", "improvements")
+    readonly_fields = ("submitted_at",)
+    actions = ("mark_reviewed",)
+
+    def mark_reviewed(self, request, queryset):
+        queryset.update(reviewed=True)
+    mark_reviewed.short_description = "Mark selected as reviewed"

@@ -28,8 +28,7 @@ def send_otp_via_sms(phone, otp):
         return {"Status": "Error", "Details": "API key not configured."}
 
     template_name = "HiraPuraLogin"  # your approved SMS template
-    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{otp}/{template_name}"
-
+    url = f"https://2factor.in/API/V1/{api_key}/SMS/{phone}/{otp}/{template_name}?force=SMS"
     try:
         response = requests.get(url, timeout=10)
         data = response.json()

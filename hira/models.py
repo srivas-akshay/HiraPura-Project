@@ -77,3 +77,94 @@ class PhoneOTP(models.Model):
 
     def __str__(self):
         return f"OTP for {self.contact.full_name} ({self.contact.whatsapp_no})"
+    
+
+
+    
+
+
+# ---------------------------
+# Feedback Models
+# ---------------------------
+RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+
+class PreEventFeedback(models.Model):
+    """
+    Feedback given BEFORE attending the event (expectations, travel help, info, etc.)
+    """
+    contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, blank=True, null=True, related_name="pre_feedbacks")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="pre_feedbacks")
+    submitted_at = models.DateTimeField(default=timezone.now)
+
+    # Core rating / summary
+    expected_experience_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
+                                                                  help_text="1-5 rating for expected experience")
+    ease_of_registration = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
+                                                            help_text="1-5 registration process ease")
+    clarity_of_communications = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
+                                                                 help_text="1-5 clarity of pre-event information")
+
+    # attendance intent + logistics
+    will_attend = models.BooleanField(default=True, help_text="Does the person intend to attend?")
+    travel_help_needed = models.BooleanField(default=False, help_text="Does the person need travel help?")
+    expected_number_of_people = models.PositiveSmallIntegerField(default=1)
+
+    # free text
+    expectations = models.TextField(blank=True, help_text="What do you expect from the event?")
+    concerns = models.TextField(blank=True, help_text="Any concerns or special requests?")
+
+    # admin helpers
+    is_anonymous = models.BooleanField(default=False)
+    reviewed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-submitted_at"]
+        verbose_name = "Pre-event feedback"
+        verbose_name_plural = "Pre-event feedbacks"
+
+    def __str__(self):
+        who = self.contact.full_name if self.contact else "Anonymous"
+        return f"PreFeedback: {who} ({self.event})"
+
+
+class PostEventFeedback(models.Model):
+    """
+    Feedback after the event (satisfaction, suggestions, rating, would-attend-again)
+    """
+    contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, blank=True, null=True, related_name="post_feedbacks")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="post_feedbacks")
+    submitted_at = models.DateTimeField(default=timezone.now)
+
+    # core ratings
+    overall_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
+                                                      help_text="1-5 overall satisfaction")
+    organization_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
+                                                           help_text="1-5 event organization")
+    food_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
+                                                   help_text="1-5 food / refreshments")
+    venue_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
+                                                    help_text="1-5 venue / facilities")
+
+    attended = models.BooleanField(default=True, help_text="Did they actually attend?")
+    would_recommend = models.BooleanField(null=True, blank=True, help_text="Would they recommend this event?")
+
+    # free text
+    highlights = models.TextField(blank=True, help_text="What did you like most?")
+    improvements = models.TextField(blank=True, help_text="What should we improve?")
+
+    # optional follow-up
+    allow_contact_for_followup = models.BooleanField(default=False)
+    contact_note = models.TextField(blank=True, help_text="If allow_contact_for_followup is True, note preferred follow up method.")
+
+    # admin helpers
+    is_anonymous = models.BooleanField(default=False)
+    reviewed = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-submitted_at"]
+        verbose_name = "Post-event feedback"
+        verbose_name_plural = "Post-event feedbacks"
+
+    def __str__(self):
+        who = self.contact.full_name if self.contact else "Anonymous"
+        return f"PostFeedback: {who} ({self.event})"

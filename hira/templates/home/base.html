@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hirapura Event Portal{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f9fafb;
+            font-family: "Poppins", sans-serif;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+        }
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .navbar-nav .nav-link {
+            color: #f0f8ff !important;
+            font-weight: 500;
+        }
+        .navbar-nav .nav-link:hover, .navbar-nav .nav-link:focus {
+            color: #ffdd00 !important;
+        }
+        .dropdown-menu {
+            border-radius: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #002b5b;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        footer a {
+            color: #ffdd00;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Suggestion Card */
+        .suggestion-card {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .suggestion-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar-nav {
+                text-align: center;
+            }
+            .navbar-nav .nav-item {
+                margin-bottom: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}">🌸 Hirapura Event Portal</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'home' %}">Home</a>
+        </li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="feedbackDropdown" role="button" data-bs-toggle="dropdown">
+            Feedback
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="feedbackDropdown">
+            <li><a class="dropdown-item" href="{% url 'pre_feedback' %}">Pre-Event Feedback</a></li>
+            <li><a class="dropdown-item" href="{% url 'post_feedback' %}">Post-Event Feedback</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'contact_us' %}">Contact Us</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about_us' %}">About Us</a>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Main content -->
+<div class="container mt-4 mb-5">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Suggestion Section -->
+<div class="container mt-5">
+    <div class="suggestion-card text-center">
+        <h5 class="card-title">💡 Have a Suggestion?</h5>
+        <p class="text-muted">We value your ideas to improve upcoming events. Drop your suggestions below!</p>
+        <a href="{% url 'contact_us' %}" class="btn btn-outline-primary">Send Suggestion</a>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; {{ now|date:"Y" }} Hirapura Event Portal | Built with ❤️ by Akshay</p>
+  <p>
+    <a href="{% url 'contact_us' %}">Contact</a> |
+    <a href="{% url 'about_us' %}">About</a>
+  </p>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

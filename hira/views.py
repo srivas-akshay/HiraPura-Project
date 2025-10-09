@@ -32,7 +32,7 @@ def login_view(request):
             try:
                 contact = Contact.objects.get(whatsapp_no=phone)
             except Contact.DoesNotExist:
-                messages.error(request, "This number is not registered.")
+                messages.error(request, "This number is not registered. Please Contact to Admin Mr. Tushar Patel (+91 9924120875 ) ")
                 
                 return render(request, "home/login.html", {"form": form, "show_otp": False})
 
