@@ -1,91 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>HIRA PURA - Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --accent-start: #ff9933;
-      --accent-end:   #138808;
-      --glass-bg: rgba(255, 255, 255, 0.1);
-      --glass-border: rgba(255, 255, 255, 0.25);
-      --text: #ffffff;
-      --muted: rgba(255,255,255,0.7);
-    }
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body {
-      font-family: 'Rajdhani', sans-serif;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: url("{% static 'home/bg2.jpeg' %}") no-repeat center center/cover;
-    }
-    body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.4);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      z-index: 0;
-    }
-    .glass-card {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 420px;
-      padding: 40px 30px;
-      border-radius: 10px;
-      background: var(--glass-bg);
-      backdrop-filter: blur(20px) saturate(150%);
-      -webkit-backdrop-filter: blur(20px) saturate(150%);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
-      color: var(--text);
-      text-align: center;
-    }
-    .glass-card h1 { font-size: 26px; margin-bottom: 10px; }
-    .glass-card p { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
-    .form-field { position: relative; margin: 20px 0; width: 100%; }
-    .form-field input {
-      width: 100%;
-      padding: 16px 20px;
-      border-radius: 30px;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-      font-size: 16px;
-      outline: none;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-    }
-    .form-field input::placeholder { color: rgba(255,255,255,0.6); }
-    .form-field input:focus { border-color: var(--accent-end); box-shadow: 0 0 15px rgba(19,136,8,0.4); }
-    .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 30px;
-      background-color: rgb(1, 165, 75);
-      color: #fff;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 10px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(19,136,8,0.4); }
-    .messages { margin-top: 15px; font-size: 14px; font-weight: 600; }
-    @media(max-width: 600px) {
-      .glass-card { width: 100%; height: 100vh; border-radius: 0; display: flex; flex-direction: column; justify-content: center; }
-    }
-  </style>
-</head>
-<body>
-  <div class="glass-card">
+
+{% block title %}Pre Event Feedback{% endblock %}
+
+{% block content %}
+<div class="glass-card">
     <h1>HIRAPURA</h1>
     <p>હિરાપુરા ગામના સ્વાગત સમ્મેલનમાં આવવા માટે કૃપા કરીને ફોન નંબરથી લોગિન કરો.</p>
     <p>To attend the welcome gathering in Hirapura village, please log in with your phone number.</p>
@@ -95,7 +14,7 @@
       {% csrf_token %}
       <input type="hidden" name="action" value="send_otp">
       <div class="form-field">{{ form.phone }}</div>
-      <button type="submit" class="btn">Send OTP</button>
+      <button type="submit" class="btn-glass">Send OTP</button>
     </form>
     {% endif %}
 
@@ -109,14 +28,14 @@
       <div class="form-field">
         <input type="text" name="otp" placeholder="Enter OTP received on your phone" required autofocus>
       </div>
-      <button type="submit" class="btn">Verify & Login</button>
+      <button type="submit" class="btn-glass">Verify & Login</button>
     </form>
 
     <form method="post" style="margin-top:12px;">
       {% csrf_token %}
       <input type="hidden" name="action" value="send_otp">
       <input type="hidden" name="phone" value="{{ phone }}">
-      <button type="submit" class="btn">Resend OTP</button>
+      <button type="submit" class="btn-glass">Resend OTP</button>
     </form>
     {% endif %}
 
@@ -125,6 +44,5 @@
         <div class="messages {{ message.tags }}">{{ message|linebreaksbr }}</div>
       {% endfor %}
     {% endif %}
-  </div>
-</body>
-</html>
+</div>
+{% endblock %}

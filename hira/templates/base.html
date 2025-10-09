@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Hirapura Event Portal{% endblock %}</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --accent: #00c896;
+      --accent-dark: #009f75;
+      --text-light: #f1f1f1;
+      --text-muted: #cfd9df;
+      --bg-gradient: linear-gradient(135deg, #1f4037, #99f2c8);
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .navbar-brand {
+      color: var(--text-light) !important;
+      font-family: "Rajdhani", sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+    }
+    .navbar-nav .nav-link {
+      color: var(--text-muted) !important;
+      transition: 0.3s;
+    }
+    .navbar-nav .nav-link:hover {
+      color: var(--accent) !important;
+    }
+
+    /* Hero Section (Optional) */
+    .hero-section {
+      text-align: center;
+      padding: 90px 15px 40px;
+      color: var(--text-light);
+      background: transparent;
+    }
+    .hero-section h1 {
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      font-size: 2.4rem;
+    }
+    .hero-section p {
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 10px auto 0;
+    }
+
+    /* Main Container */
+    main.container {
+      flex: 1;
+      padding: 30px 15px;
+    }
+
+    /* Suggestion Card */
+    .suggestion-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(15px);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      transition: 0.3s;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-light);
+    }
+    .suggestion-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    }
+
+    /* Button Styling */
+    .btn-glow {
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      border-radius: 25px;
+      padding: 10px 20px;
+      transition: all 0.3s ease;
+    }
+    .btn-glow:hover {
+      background: var(--accent-dark);
+      box-shadow: 0 0 15px rgba(0,255,175,0.5);
+    }
+
+    /* Footer */
+    footer {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(12px);
+      color: var(--text-muted);
+      text-align: center;
+      padding: 15px 0;
+      font-size: 14px;
+      margin-top: auto;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Glass Card (for login, etc.) */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(20px);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text-light);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      padding: 35px 25px;
+      margin: 40px auto;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .glass-card h1 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .glass-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+    .form-field input {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 30px;
+      padding: 12px 20px;
+      color: #fff;
+      width: 100%;
+      margin-bottom: 15px;
+      outline: none;
+    }
+    .form-field input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(0,255,175,0.4);
+    }
+    .messages {
+      margin-top: 15px;
+      font-weight: 500;
+      color: #ffcc00;
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'home' %}">🌿 Hirapura Event Portal</a>
+      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Feedback</a>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item" href="{% url 'pre_feedback' %}">Pre-Event</a></li>
+              <li><a class="dropdown-item" href="{% url 'post_feedback' %}">Post-Event</a></li>
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'contact_us' %}">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'about_us' %}">About</a></li>
+          <li class="nav-item ms-lg-3">
+              <a href="{% url 'login' %}" class="btn btn-light fw-semibold px-3 py-1 rounded-pill shadow-sm">
+                Login
+               </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Optional Hero Section -->
+  <section class="hero-section">
+    <h1>Welcome to Hirapura Village Event Portal</h1>
+    <p>Celebrate our culture, connect with the community, and share your feedback to make every event unforgettable.</p>
+  </section>
+
+  <!-- Main Content -->
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Suggestion Section -->
+  <div class="container mb-5">
+    <div class="suggestion-card">
+      <h5>💡 Have a Suggestion?</h5>
+      <p>We value your feedback and creativity to make upcoming events even better.</p>
+      <a href="{% url 'contact_us' %}" class="btn btn-glow">Send Suggestion</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; {{ now|date:"Y" }} Hirapura Event Portal | Crafted with 💚 by Akshay</p>
+    <p><a href="{% url 'about_us' %}">About</a> | <a href="{% url 'contact_us' %}">Contact</a></p>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

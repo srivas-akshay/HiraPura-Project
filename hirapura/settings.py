@@ -68,7 +68,7 @@ MIDDLEWARE = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # optional: can include BASE_DIR / "templates" if you want
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # optional: can include BASE_DIR / "templates" if you want
         'APP_DIRS': True,  # important: looks inside app/templates/
         'OPTIONS': {
             'context_processors': [

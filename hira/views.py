@@ -214,3 +214,49 @@ def upi_redirect_view(request, token):
         f"&am={booking.total_amount}&cu=INR"
     )
     return redirect(upi_url)
+
+
+
+
+
+def home_view(request):
+    """
+    
+    """
+    return render(request, "home/home.html")
+
+
+
+
+
+
+def pre_feedback_view(request):
+    """
+    Display Pre-Event Feedback page.
+    """
+    return render(request, "home/pre_feedback.html")
+
+
+def post_feedback_view(request):
+    """
+    Display Post-Event Feedback page.
+    """
+    return render(request, "home/post_feedback.html")
+
+
+# -------------------------------
+# Contact & About Views
+# -------------------------------
+
+def contact_us_view(request):
+    """
+    Display Contact Us page.
+    """
+    return render(request, "home/contact_us.html")
+
+
+def about_us_view(request):
+    """
+    Display About Us page.
+    """
+    return render(request, "home/about_us.html")

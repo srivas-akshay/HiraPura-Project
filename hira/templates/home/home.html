@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Home | Hirapura Event Portal{% endblock %}
+{% load static %}
+{% block content %}
+
+<!-- Hero Section -->
+<section class="text-center py-5" style="background: linear-gradient(135deg, #0077b6, #00b4d8); color: white; border-radius: 15px;">
+  <div class="container">
+    <h1 class="display-5 fw-bold mb-3">🌸 Welcome to Hirapura Event Portal 🌸</h1>
+    <p class="lead mb-4">
+      Celebrate unity, culture, and joy! Stay updated with upcoming village events and share your feedback.
+    </p>
+    <a href="{% url 'login' %}" class="btn btn-light btn-lg px-4 py-2 rounded-pill fw-semibold shadow-sm">
+      Join the Celebration
+    </a>
+  </div>
+</section>
+
+<!-- Upcoming Events -->
+<section class="container mt-5">
+  <h2 class="text-center fw-bold mb-4" style="color: #0077b6;">🎉 Upcoming Events</h2>
+  <div class="row g-4">
+    {% comment %} Example event cards - you can later loop through events dynamically {% endcomment %}
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 rounded-4 h-100">
+        <img src="{% static 'home/event1.jpg' %}" class="card-img-top rounded-top-4" alt="Event 1">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Garba Mahotsav 2025</h5>
+          <p class="card-text text-muted">Celebrate Navratri with music, dance, and colors of joy in Hirapura!</p>
+          <p class="small text-primary fw-semibold">📅 Oct 20, 2025 | 🕕 7 PM Onwards</p>
+          <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-pill">Register</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 rounded-4 h-100">
+        <img src="{% static 'home/event2.jpg' %}" class="card-img-top rounded-top-4" alt="Event 2">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Cultural Night</h5>
+          <p class="card-text text-muted">A night of folk songs, traditional acts, and heartfelt laughter.</p>
+          <p class="small text-primary fw-semibold">📅 Nov 2, 2025 | 🕖 6:30 PM</p>
+          <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-pill">Register</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 rounded-4 h-100">
+        <img src="{% static 'home/event3.jpg' %}" class="card-img-top rounded-top-4" alt="Event 3">
+        <div class="card-body">
+          <h5 class="card-title fw-bold">Swagat Sammelan</h5>
+          <p class="card-text text-muted">Welcome guests with traditional grace and community spirit.</p>
+          <p class="small text-primary fw-semibold">📅 Dec 10, 2025 | 🕕 5 PM</p>
+          <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-pill">Register</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Highlights / Gallery -->
+<section class="container mt-5">
+  <h2 class="text-center fw-bold mb-4" style="color: #00b4d8;">✨ Event Highlights</h2>
+  <div class="row g-3">
+    <div class="col-6 col-md-3">
+      <img src="{% static 'home/highlight1.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="">
+    </div>
+    <div class="col-6 col-md-3">
+      <img src="{% static 'home/highlight2.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="">
+    </div>
+    <div class="col-6 col-md-3">
+      <img src="{% static 'home/highlight3.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="">
+    </div>
+    <div class="col-6 col-md-3">
+      <img src="{% static 'home/highlight4.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="">
+    </div>
+  </div>
+</section>
+
+<!-- Feedback CTA -->
+<section class="text-center mt-5 py-5" style="background: linear-gradient(135deg, #ff9933, #138808); color: white; border-radius: 12px;">
+  <div class="container">
+    <h2 class="fw-bold mb-3">💬 We Value Your Feedback</h2>
+    <p class="mb-4">Help us improve future events by sharing your valuable suggestions.</p>
+    <a href="{% url 'post_feedback' %}" class="btn btn-light btn-lg rounded-pill fw-semibold shadow-sm">
+      Share Feedback
+    </a>
+  </div>
+</section>
+
+{% endblock %}
