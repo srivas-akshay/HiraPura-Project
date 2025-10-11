@@ -17,8 +17,7 @@ hirapura_admin = HirapuraAdminSite(name='hirapura_admin')
 # ===========================
 # Register built-in auth models
 # ===========================
-hirapura_admin.register(User)
-hirapura_admin.register(Group)
+
 
 # ===========================
 # Contact Admin
@@ -94,24 +93,15 @@ hirapura_admin.register(Booking, BookingAdmin)
 
 @admin.register(PreEventFeedback)
 class PreEventFeedbackAdmin(admin.ModelAdmin):
-    list_display = ("id", "contact", "event", "will_attend", "expected_experience_rating", "submitted_at", "reviewed")
-    list_filter = ("event", "will_attend", "reviewed")
+    list_display = ("id", "contact", "event", "expected_experience_rating", "ease_of_registration", "clarity_of_communications", "submitted_at")
+    list_filter = ("event",)
     search_fields = ("contact__full_name", "contact__whatsapp_no", "expectations", "concerns")
     readonly_fields = ("submitted_at",)
-    actions = ("mark_reviewed",)
 
-    def mark_reviewed(self, request, queryset):
-        queryset.update(reviewed=True)
-    mark_reviewed.short_description = "Mark selected as reviewed"
 
 @admin.register(PostEventFeedback)
 class PostEventFeedbackAdmin(admin.ModelAdmin):
-    list_display = ("id", "contact", "event", "overall_rating", "attended", "submitted_at", "reviewed")
-    list_filter = ("event", "attended", "reviewed")
+    list_display = ("id", "contact", "event", "overall_rating", "organization_rating", "venue_rating", "food_rating", "submitted_at")
+    list_filter = ("event",)
     search_fields = ("contact__full_name", "contact__whatsapp_no", "highlights", "improvements")
     readonly_fields = ("submitted_at",)
-    actions = ("mark_reviewed",)
-
-    def mark_reviewed(self, request, queryset):
-        queryset.update(reviewed=True)
-    mark_reviewed.short_description = "Mark selected as reviewed"

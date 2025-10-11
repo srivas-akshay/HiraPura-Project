@@ -86,85 +86,117 @@ class PhoneOTP(models.Model):
 # ---------------------------
 # Feedback Models
 # ---------------------------
+
 RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
 
 class PreEventFeedback(models.Model):
     """
-    Feedback given BEFORE attending the event (expectations, travel help, info, etc.)
+    Feedback given before attending the event (expectations, clarity, registration experience, etc.)
     """
-    contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, blank=True, null=True, related_name="pre_feedbacks")
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="pre_feedbacks")
-    submitted_at = models.DateTimeField(default=timezone.now)
+    event = models.ForeignKey(
+        'Event', on_delete=models.CASCADE, related_name="pre_feedbacks",
+        verbose_name="Event"
+    )
+    contact = models.ForeignKey(
+        'Contact', on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name="Contact Person"
+    )
+    submitted_at = models.DateTimeField(default=timezone.now, verbose_name="Submitted At")
 
-    # Core rating / summary
-    expected_experience_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
-                                                                  help_text="1-5 rating for expected experience")
-    ease_of_registration = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
-                                                            help_text="1-5 registration process ease")
-    clarity_of_communications = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
-                                                                 help_text="1-5 clarity of pre-event information")
+    # Ratings
+    expected_experience_rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, null=True, blank=True,
+        verbose_name="Expected Experience Rating",
+        help_text="1–5 rating for expected experience"
+    )
+    ease_of_registration = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, null=True, blank=True,
+        verbose_name="Ease of Registration Rating",
+        help_text="1–5 rating for how easy registration was"
+    )
+    clarity_of_communications = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, null=True, blank=True,
+        verbose_name="Clarity of Communication Rating",
+        help_text="1–5 rating for how clear event info was"
+    )
 
-    # attendance intent + logistics
-    will_attend = models.BooleanField(default=True, help_text="Does the person intend to attend?")
-    travel_help_needed = models.BooleanField(default=False, help_text="Does the person need travel help?")
-    expected_number_of_people = models.PositiveSmallIntegerField(default=1)
-
-    # free text
-    expectations = models.TextField(blank=True, help_text="What do you expect from the event?")
-    concerns = models.TextField(blank=True, help_text="Any concerns or special requests?")
-
-    # admin helpers
-    is_anonymous = models.BooleanField(default=False)
-    reviewed = models.BooleanField(default=False)
+    # Text feedback
+    expectations = models.TextField(
+        blank=True, verbose_name="Expectations",
+        help_text="What are you expecting from the event?"
+    )
+    concerns = models.TextField(
+        blank=True, verbose_name="Concerns / Questions",
+        help_text="Any questions or special requests?"
+    )
 
     class Meta:
         ordering = ["-submitted_at"]
-        verbose_name = "Pre-event feedback"
-        verbose_name_plural = "Pre-event feedbacks"
+        verbose_name = "Pre-event Feedback"
+        verbose_name_plural = "Pre-event Feedbacks"
 
     def __str__(self):
         who = self.contact.full_name if self.contact else "Anonymous"
-        return f"PreFeedback: {who} ({self.event})"
+        return f"Pre-Event Feedback by {who} for {self.event}"
 
 
 class PostEventFeedback(models.Model):
     """
-    Feedback after the event (satisfaction, suggestions, rating, would-attend-again)
+    Feedback after the event (satisfaction, highlights, improvement suggestions)
     """
-    contact = models.ForeignKey(Contact, on_delete=models.SET_NULL, blank=True, null=True, related_name="post_feedbacks")
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="post_feedbacks")
-    submitted_at = models.DateTimeField(default=timezone.now)
+    event = models.ForeignKey(
+        'Event', on_delete=models.CASCADE, related_name="post_feedbacks",
+        verbose_name="Event"
+    )
+    contact = models.ForeignKey(
+        'Contact', on_delete=models.SET_NULL, null=True, blank=True,
+        verbose_name="Contact Person"
+    )
+    submitted_at = models.DateTimeField(default=timezone.now, verbose_name="Submitted At")
 
-    # core ratings
-    overall_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
-                                                      help_text="1-5 overall satisfaction")
-    organization_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
-                                                           help_text="1-5 event organization")
-    food_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
-                                                   help_text="1-5 food / refreshments")
-    venue_rating = models.PositiveSmallIntegerField(choices=RATING_CHOICES, null=True, blank=True,
-                                                    help_text="1-5 venue / facilities")
+    # Core ratings
+    overall_rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, null=True, blank=True,
+        verbose_name="Overall Satisfaction",
+        help_text="1–5 rating for overall satisfaction"
+    )
+    organization_rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, null=True, blank=True,
+        verbose_name="Organization Rating",
+        help_text="1–5 rating for event organization"
+    )
+    venue_rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, null=True, blank=True,
+        verbose_name="Venue Rating",
+        help_text="1–5 rating for venue and facilities"
+    )
+    food_rating = models.PositiveSmallIntegerField(
+        choices=RATING_CHOICES, null=True, blank=True,
+        verbose_name="Food Rating",
+        help_text="1–5 rating for food / refreshments"
+    )
 
-    attended = models.BooleanField(default=True, help_text="Did they actually attend?")
-    would_recommend = models.BooleanField(null=True, blank=True, help_text="Would they recommend this event?")
+    # Free text feedback
+    highlights = models.TextField(
+        blank=True, verbose_name="Highlights",
+        help_text="What did you like the most about the event?"
+    )
+    improvements = models.TextField(
+        blank=True, verbose_name="Improvements",
+        help_text="Any suggestions for improvement?"
+    )
 
-    # free text
-    highlights = models.TextField(blank=True, help_text="What did you like most?")
-    improvements = models.TextField(blank=True, help_text="What should we improve?")
-
-    # optional follow-up
-    allow_contact_for_followup = models.BooleanField(default=False)
-    contact_note = models.TextField(blank=True, help_text="If allow_contact_for_followup is True, note preferred follow up method.")
-
-    # admin helpers
-    is_anonymous = models.BooleanField(default=False)
-    reviewed = models.BooleanField(default=False)
+    # Optional preference
+    would_recommend = models.BooleanField(
+        null=True, blank=True, verbose_name="Would Recommend",
+        help_text="Would you recommend this event to others?"
+    )
 
     class Meta:
         ordering = ["-submitted_at"]
-        verbose_name = "Post-event feedback"
-        verbose_name_plural = "Post-event feedbacks"
+        verbose_name = "Post-event Feedback"
+        verbose_name_plural = "Post-event Feedbacks"
 
     def __str__(self):
         who = self.contact.full_name if self.contact else "Anonymous"
-        return f"PostFeedback: {who} ({self.event})"
+        return f"Post-event feedback by {who} for {self.event}"

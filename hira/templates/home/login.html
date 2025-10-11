@@ -4,6 +4,34 @@
 {% block title %}Pre Event Feedback{% endblock %}
 
 {% block content %}
+<style>
+  .btn-glass {
+  background: rgba(255, 255, 255, 0.15);  /* semi-transparent glass */
+  backdrop-filter: blur(10px);            /* glass blur effect */
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.3); 
+  color: #fff;                             /* text color */
+  font-weight: 600;
+  border-radius: 50px;                     /* pill shape */
+  padding: 12px 30px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.25);  /* slightly brighter */
+  box-shadow: 0 6px 20px rgba(0,255,175,0.5); /* subtle neon glow */
+  transform: translateY(-2px);
+  color: #00ffc8;                          /* premium glow text on hover */
+}
+
+.btn-glass:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+</style>
 <div class="glass-card">
     <h1>HIRAPURA</h1>
     <p>હિરાપુરા ગામના સ્વાગત સમ્મેલનમાં આવવા માટે કૃપા કરીને ફોન નંબરથી લોગિન કરો.</p>
@@ -31,6 +59,14 @@
       <button type="submit" class="btn-glass">Verify & Login</button>
     </form>
 
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show mt-3 text-center" role="alert">
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+           </div>
+          {% endfor %}
+    {% endif %}
     <form method="post" style="margin-top:12px;">
       {% csrf_token %}
       <input type="hidden" name="action" value="send_otp">

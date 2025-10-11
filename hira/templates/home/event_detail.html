@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Event Registration{% endblock %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 600px; margin: auto;">
+    <h3 class="text-center mb-4 text-success fw-bold">🎉 Event Registration Confirmed</h3>
+
+    <div class="text-center mb-3">
+      <img src="{% static 'home/success.png' %}" alt="Success" width="80">
+    </div>
+
+    <p class="text-center text-muted">
+      Thank you, <strong>{{ user.first_name|default:user.username }}</strong>!  
+      You’ve successfully registered for event <strong>#{{ event_id }}</strong>.
+    </p>
+
+    <div class="mt-4">
+      <h5>Your Details:</h5>
+      <ul class="list-unstyled">
+        <li><strong>👤 Name:</strong> {{ user.get_full_name|default:user.username }}</li>
+        <li><strong>📧 Email:</strong> {{ user.email }}</li>
+        <li><strong>🆔 User ID:</strong> {{ user.id }}</li>
+      </ul>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{% url 'home' %}" class="btn btn-success rounded-pill px-4 py-2 fw-semibold">Go to Home</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

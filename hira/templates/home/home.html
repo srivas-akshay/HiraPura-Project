@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 {% block title %}Home | Hirapura Event Portal{% endblock %}
 {% load static %}
+
 {% block content %}
 
 <!-- Hero Section -->
-<section class="text-center py-5" style="background: linear-gradient(135deg, #0077b6, #00b4d8); color: white; border-radius: 15px;">
+<section class="text-center py-5"
+  style="background: linear-gradient(135deg, #000a0f, #82d9eb); color: white; border-radius: 15px;">
   <div class="container">
-    <h1 class="display-5 fw-bold mb-3">🌸 Welcome to Hirapura Event Portal 🌸</h1>
+    <h1 class="display-5 fw-bold mb-3">Welcome to Hirapura Event</h1>
     <p class="lead mb-4">
       Celebrate unity, culture, and joy! Stay updated with upcoming village events and share your feedback.
     </p>
@@ -16,77 +18,107 @@
   </div>
 </section>
 
-<!-- Upcoming Events -->
-<section class="container mt-5">
-  <h2 class="text-center fw-bold mb-4" style="color: #0077b6;">🎉 Upcoming Events</h2>
-  <div class="row g-4">
-    {% comment %} Example event cards - you can later loop through events dynamically {% endcomment %}
-    <div class="col-md-4">
-      <div class="card shadow-sm border-0 rounded-4 h-100">
-        <img src="{% static 'home/event1.jpg' %}" class="card-img-top rounded-top-4" alt="Event 1">
-        <div class="card-body">
-          <h5 class="card-title fw-bold">Garba Mahotsav 2025</h5>
-          <p class="card-text text-muted">Celebrate Navratri with music, dance, and colors of joy in Hirapura!</p>
-          <p class="small text-primary fw-semibold">📅 Oct 20, 2025 | 🕕 7 PM Onwards</p>
-          <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-pill">Register</a>
-        </div>
-      </div>
-    </div>
+<!-- 🌟 Featured Event Section -->
+<section class="container my-5">
+  <h2 class="text-center fw-bold mb-4" style="color: #e3fadd;">🌟 Featured Event</h2>
 
-    <div class="col-md-4">
-      <div class="card shadow-sm border-0 rounded-4 h-100">
-        <img src="{% static 'home/event2.jpg' %}" class="card-img-top rounded-top-4" alt="Event 2">
-        <div class="card-body">
-          <h5 class="card-title fw-bold">Cultural Night</h5>
-          <p class="card-text text-muted">A night of folk songs, traditional acts, and heartfelt laughter.</p>
-          <p class="small text-primary fw-semibold">📅 Nov 2, 2025 | 🕖 6:30 PM</p>
-          <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-pill">Register</a>
-        </div>
-      </div>
-    </div>
+  <div class="card border-0 shadow-lg rounded-4 overflow-hidden w-100 mx-auto event-stretch-card"
+       style="max-width: 950px; background: rgba(20,20,30,0.85); backdrop-filter: blur(15px);">
+    <div class="row g-0 align-items-center">
 
-    <div class="col-md-4">
-      <div class="card shadow-sm border-0 rounded-4 h-100">
-        <img src="{% static 'home/event3.jpg' %}" class="card-img-top rounded-top-4" alt="Event 3">
-        <div class="card-body">
-          <h5 class="card-title fw-bold">Swagat Sammelan</h5>
-          <p class="card-text text-muted">Welcome guests with traditional grace and community spirit.</p>
-          <p class="small text-primary fw-semibold">📅 Dec 10, 2025 | 🕕 5 PM</p>
-          <a href="{% url 'login' %}" class="btn btn-outline-primary btn-sm rounded-pill">Register</a>
-        </div>
+      <!-- Left Image -->
+      <div class="col-md-5">
+        <img src="{% static 'home/invitation.png' %}" alt="Featured Event"
+             class="img-fluid h-100 w-100 object-fit-cover" style="min-height: 230px; border-radius: 0;">
+      </div>
+
+      <!-- Right Details -->
+      <div class="col-md-7 p-4 p-md-5"
+           style="background: linear-gradient(135deg, #1c1c2e, #2c2c44); color: #f1f1f1;">
+        <h4 class="fw-bold text-warning mb-3">Village Heritage Festival 2025</h4>
+        <p class="text-light mb-3" style="opacity: 0.85;">
+          Experience the heart of Hirapura with traditional performances, crafts, food stalls, and a grand evening
+          celebration under the stars.
+        </p>
+        <ul class="list-unstyled mb-4" style="color: #d1d1d1; font-weight: 500;">
+          <li>📅 <strong>Date:</strong> December 25, 2025</li>
+          <li>🕕 <strong>Time:</strong> 6 PM onwards</li>
+          <li>📍 <strong>Venue:</strong> Hirapura Community Ground</li>
+        </ul>
+
+        {% if request.session.contact_id %}
+        <a href="{% url 'register_event' 1 %}" 
+           class="btn btn-warning px-4 py-2 rounded-pill fw-semibold shadow-sm text-dark">
+           Register Now
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}?next={% url 'register_event' 1 %}" 
+           class="btn btn-outline-warning px-4 py-2 rounded-pill fw-semibold shadow-sm">
+           Login to Register
+        </a>
+        {% endif %}
       </div>
     </div>
   </div>
 </section>
 
-<!-- Highlights / Gallery -->
+
+<!-- Upcoming Events (Keep commented)
 <section class="container mt-5">
-  <h2 class="text-center fw-bold mb-4" style="color: #00b4d8;">✨ Event Highlights</h2>
-  <div class="row g-3">
-    <div class="col-6 col-md-3">
-      <img src="{% static 'home/highlight1.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="">
-    </div>
-    <div class="col-6 col-md-3">
-      <img src="{% static 'home/highlight2.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="">
-    </div>
-    <div class="col-6 col-md-3">
-      <img src="{% static 'home/highlight3.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="">
-    </div>
-    <div class="col-6 col-md-3">
-      <img src="{% static 'home/highlight4.jpg' %}" class="img-fluid rounded-4 shadow-sm" alt="">
-    </div>
-  </div>
-</section>
+  ...
+</section> -->
+
+<!-- Gallery (Keep commented)
+<section class="container mt-5">
+  ...
+</section> -->
 
 <!-- Feedback CTA -->
-<section class="text-center mt-5 py-5" style="background: linear-gradient(135deg, #ff9933, #138808); color: white; border-radius: 12px;">
+<section class="text-center mt-5 py-5"
+  style="background: linear-gradient(135deg, #094e15, #acf7a5); color: white; border-radius: 12px;">
   <div class="container">
     <h2 class="fw-bold mb-3">💬 We Value Your Feedback</h2>
     <p class="mb-4">Help us improve future events by sharing your valuable suggestions.</p>
-    <a href="{% url 'post_feedback' %}" class="btn btn-light btn-lg rounded-pill fw-semibold shadow-sm">
+    <a href="{% url 'pre_feedback' %}" class="btn btn-light btn-lg rounded-pill fw-semibold shadow-sm">
       Share Feedback
     </a>
   </div>
 </section>
+
+<!-- Styles -->
+<style>
+  /* Stretch card responsiveness and hover feel */
+  .event-stretch-card {
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    background: #ffffff;
+  }
+
+  .event-stretch-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Adjust left image height and fit */
+  .event-stretch-card img {
+    object-fit: cover;
+    height: 100%;
+    transition: transform 0.5s ease;
+  }
+
+  .event-stretch-card:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Responsive stacking */
+  @media (max-width: 768px) {
+    .event-stretch-card .col-md-5 {
+      height: 220px;
+    }
+
+    .event-stretch-card img {
+      border-bottom: 2px solid #eee;
+    }
+  }
+</style>
 
 {% endblock %}

@@ -9,10 +9,15 @@ urlpatterns = [
     path("upi/<str:token>/", views.upi_redirect_view, name="upi_redirect"),
 
     # Feedback pages
-    path("pre-feedback/", views.pre_feedback_view, name="pre_feedback"),
-    path("post-feedback/", views.post_feedback_view, name="post_feedback"),
+    path('pre-feedback/', views.pre_event_feedback, name='pre_feedback'),
+    path('post-feedback/', views.post_event_feedback, name='post_feedback'),
 
     # Contact & About
     path("contact-us/", views.contact_us_view, name="contact_us"),
     path("about-us/", views.about_us_view, name="about_us"),
+
+     path("register-event/<int:event_id>/", views.register_event, name="register_event"),
+     path("logout/", views.logout_view, name="logout"),
+
 ]
+

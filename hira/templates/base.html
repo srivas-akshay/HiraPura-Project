@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +15,7 @@
 
   <!-- Icons -->
   <link href="https://unpkg.com/lucide-static@latest/font/lucide.css" rel="stylesheet" />
+  
 
   <style>
     :root {
@@ -179,41 +181,85 @@
 <body>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg">
-    <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">🌿 Hirapura Event Portal</a>
-      <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navMenu">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Feedback</a>
-            <ul class="dropdown-menu dropdown-menu-dark">
-              <li><a class="dropdown-item" href="{% url 'pre_feedback' %}">Pre-Event</a></li>
-              <li><a class="dropdown-item" href="{% url 'post_feedback' %}">Post-Event</a></li>
-            </ul>
-          </li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'contact_us' %}">Contact</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'about_us' %}">About</a></li>
-          <li class="nav-item ms-lg-3">
-              <a href="{% url 'login' %}" class="btn btn-light fw-semibold px-3 py-1 rounded-pill shadow-sm">
-                Login
-               </a>
-          </li>
-        </ul>
-      </div>
+  <div class="container">
+    <!-- Brand -->
+    <a class="navbar-brand" href="{% url 'home' %}">🌿 Hirapura Event Portal</a>
+    <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto">
+
+  <!-- Always visible -->
+  <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url 'contact_us' %}">Contact</a></li>
+  <li class="nav-item"><a class="nav-link" href="{% url 'about_us' %}">About</a></li>
+
+  {% if request.session.contact_id %}
+    <!-- Logged-in user links -->
+    {% if request.session.otp_contact_phone %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'details' phone=request.session.otp_contact_phone %}">Dashboard</a></li>
+    {% endif %}
+
+    <!-- Feedback dropdown -->
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Feedback</a>
+      <ul class="dropdown-menu dropdown-menu-dark">
+        <li><a class="dropdown-item" href="{% url 'pre_feedback' %}">Pre-Event</a></li>
+        <li><a class="dropdown-item" href="{% url 'post_feedback' %}">Post-Event</a></li>
+      </ul>
+    </li>
+
+    <!-- Superuser → Admin Panel -->
+    {% if request.user.is_superuser %}
+      <li class="nav-item ms-lg-3">
+        <a href="{% url 'admin:index' %}" class="btn btn-warning fw-semibold px-3 py-1 rounded-pill shadow-sm">
+          Admin Panel
+        </a>
+      </li>
+    {% endif %}
+
+    <!-- Logout button -->
+    <li class="nav-item ms-lg-3">
+      <a href="{% url 'logout' %}" class="btn btn-light fw-semibold px-3 py-1 rounded-pill shadow-sm">
+        Logout
+      </a>
+    </li>
+
+  {% else %}
+    <!-- Not logged-in -->
+    <li class="nav-item ms-lg-3">
+      <a href="{% url 'login' %}" class="btn btn-light fw-semibold px-3 py-1 rounded-pill shadow-sm">
+        Login
+      </a>
+    </li>
+  {% endif %}
+
+</ul>
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>
 
   <!-- Optional Hero Section -->
-  <section class="hero-section">
+  <!-- <section class="hero-section">
     <h1>Welcome to Hirapura Village Event Portal</h1>
     <p>Celebrate our culture, connect with the community, and share your feedback to make every event unforgettable.</p>
-  </section>
+  </section> -->
 
   <!-- Main Content -->
   <main class="container">
+    {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
     {% block content %}{% endblock %}
   </main>
 
@@ -228,7 +274,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; {{ now|date:"Y" }} Hirapura Event Portal | Crafted with 💚 by Akshay</p>
+    <p>&copy; {{ now|date:"Y" }} Hirapura Event Portal </p>
     <p><a href="{% url 'about_us' %}">About</a> | <a href="{% url 'contact_us' %}">Contact</a></p>
   </footer>
 
