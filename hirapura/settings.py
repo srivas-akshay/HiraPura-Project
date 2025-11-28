@@ -173,3 +173,9 @@ CACHES = {
         "LOCATION": "unique-snowflake",
     }
 }
+
+# Payment method 
+
+
+RAZORPAY_KEY_ID = "YOUR_RAZORPAY_KEY_ID"
+RAZORPAY_KEY_SECRET = "YOUR_RAZORPAY_KEY_SECRET"

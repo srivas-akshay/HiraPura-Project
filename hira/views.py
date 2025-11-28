@@ -54,7 +54,7 @@ def login_view(request):
             try:
                 contact = Contact.objects.get(whatsapp_no=phone)
             except Contact.DoesNotExist:
-                messages.error(request, "This number is not registered. Please contact admin.")
+                messages.error(request, "This number is not registered. Please contact admin to Registered .")
                 return render(request, "home/login.html", {"form": form, "show_otp": False, "phone": phone})
 
             ok, msg = can_send_otp(phone)
@@ -98,6 +98,7 @@ def login_view(request):
                 otp_obj.mark_used()
                 # ✅ Set contact_id in session
                 request.session['contact_id'] = contact.id
+                request.session['otp_contact_phone'] = contact.whatsapp_no
                 messages.success(request, f"Welcome {contact.full_name}!")
                 return redirect('home')
             else:
