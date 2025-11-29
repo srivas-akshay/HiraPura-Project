@@ -35,24 +35,6 @@ class Event(models.Model):
         return f"{self.title} on {self.date} at {self.time}"
 
 
-class Booking(models.Model):
-    name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=15)
-    num_people = models.PositiveIntegerField()
-    total_amount = models.PositiveIntegerField()
-    is_vip = models.BooleanField(default=False)
-    is_paid = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    # Relationship with event (1 event = many bookings)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="bookings")
-    upi_token = models.CharField(max_length=50, blank=True, null=True, unique=True)
-
-    def __str__(self):
-        return f"{self.name} ({self.phone}) - {self.num_people} people"
-    
-
-
  
 class PhoneOTP(models.Model):
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE, related_name="phone_otps", null=True, blank=True)
@@ -84,119 +66,118 @@ class PhoneOTP(models.Model):
 
 
 # ---------------------------
-# Feedback Models
+# Booking Models
 # ---------------------------
 
-RATING_CHOICES = [(i, str(i)) for i in range(1, 6)]
+from django.db import models
+class Booking(models.Model):
+    contact = models.ForeignKey("Contact", on_delete=models.CASCADE)
+    event = models.ForeignKey("Event", on_delete=models.CASCADE)
 
-class PreEventFeedback(models.Model):
-    """
-    Feedback given before attending the event (expectations, clarity, registration experience, etc.)
-    """
-    event = models.ForeignKey(
-        'Event', on_delete=models.CASCADE, related_name="pre_feedbacks",
-        verbose_name="Event"
-    )
-    contact = models.ForeignKey(
-        'Contact', on_delete=models.SET_NULL, null=True, blank=True,
-        verbose_name="Contact Person"
-    )
-    submitted_at = models.DateTimeField(default=timezone.now, verbose_name="Submitted At")
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=10)
 
-    # Ratings
-    expected_experience_rating = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES, null=True, blank=True,
-        verbose_name="Expected Experience Rating",
-        help_text="1–5 rating for expected experience"
-    )
-    ease_of_registration = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES, null=True, blank=True,
-        verbose_name="Ease of Registration Rating",
-        help_text="1–5 rating for how easy registration was"
-    )
-    clarity_of_communications = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES, null=True, blank=True,
-        verbose_name="Clarity of Communication Rating",
-        help_text="1–5 rating for how clear event info was"
+    # fully updateable field
+    people_count = models.PositiveIntegerField(default=1)
+
+    # gets recalculated automatically
+    amount_paid = models.PositiveIntegerField(default=0)
+
+    PAYMENT_STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("success", "Success"),
+        ("failed", "Failed"),
+    ]
+    payment_status = models.CharField(
+        max_length=10,
+        choices=PAYMENT_STATUS_CHOICES,
+        default="pending"
     )
 
-    # Text feedback
-    expectations = models.TextField(
-        blank=True, verbose_name="Expectations",
-        help_text="What are you expecting from the event?"
-    )
-    concerns = models.TextField(
-        blank=True, verbose_name="Concerns / Questions",
-        help_text="Any questions or special requests?"
-    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)  # <-- TRACK UPDATES
 
-    class Meta:
-        ordering = ["-submitted_at"]
-        verbose_name = "Pre-event Feedback"
-        verbose_name_plural = "Pre-event Feedbacks"
+    PRICE_PER_PERSON = 60  # update pricing here in one place
+
+    def save(self, *args, **kwargs):
+        """
+        Automatically recalculates amount based on:
+        - VIP = always free
+        - Normal = people_count × PRICE_PER_PERSON
+        """
+        if getattr(self.contact, "is_vip", False):
+            self.amount_paid = 0
+        else:
+            self.amount_paid = self.people_count * self.PRICE_PER_PERSON
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        who = self.contact.full_name if self.contact else "Anonymous"
-        return f"Pre-Event Feedback by {who} for {self.event}"
+        return f"Booking by {self.name} — {self.people_count} people"
 
 
-class PostEventFeedback(models.Model):
-    """
-    Feedback after the event (satisfaction, highlights, improvement suggestions)
-    """
-    event = models.ForeignKey(
-        'Event', on_delete=models.CASCADE, related_name="post_feedbacks",
-        verbose_name="Event"
-    )
-    contact = models.ForeignKey(
-        'Contact', on_delete=models.SET_NULL, null=True, blank=True,
-        verbose_name="Contact Person"
-    )
-    submitted_at = models.DateTimeField(default=timezone.now, verbose_name="Submitted At")
 
-    # Core ratings
-    overall_rating = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES, null=True, blank=True,
-        verbose_name="Overall Satisfaction",
-        help_text="1–5 rating for overall satisfaction"
-    )
-    organization_rating = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES, null=True, blank=True,
-        verbose_name="Organization Rating",
-        help_text="1–5 rating for event organization"
-    )
-    venue_rating = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES, null=True, blank=True,
-        verbose_name="Venue Rating",
-        help_text="1–5 rating for venue and facilities"
-    )
-    food_rating = models.PositiveSmallIntegerField(
-        choices=RATING_CHOICES, null=True, blank=True,
-        verbose_name="Food Rating",
-        help_text="1–5 rating for food / refreshments"
-    )
+class SiteInfo(models.Model):
+    # Only one record is needed, so you can enforce it with logic later
+    company_name = models.CharField(max_length=200, default="Hirapura Event Portal")
+    address = models.TextField(default="Hirapura Village, Community Ground Road, Hirapura, Gujarat, India")
+    phone = models.CharField(max_length=20, default="+91 98765 43210")
+    email = models.EmailField(default="info@hirapuraevents.com")
+    office_hours = models.CharField(max_length=100, default="Monday – Saturday: 9:00 AM – 6:00 PM")
+    invitation_image = models.ImageField(upload_to="site_images/", null=True, blank=True)  # optional, for event image
 
-    # Free text feedback
-    highlights = models.TextField(
-        blank=True, verbose_name="Highlights",
-        help_text="What did you like the most about the event?"
-    )
-    improvements = models.TextField(
-        blank=True, verbose_name="Improvements",
-        help_text="Any suggestions for improvement?"
-    )
-
-    # Optional preference
-    would_recommend = models.BooleanField(
-        null=True, blank=True, verbose_name="Would Recommend",
-        help_text="Would you recommend this event to others?"
-    )
+    
+    # New About Us fields
+    about_title_en = models.CharField(max_length=255, default="About Hirapura Event Portal")
+    about_text_en = models.TextField(blank=True, null=True)
+    about_text_gu = models.TextField(blank=True, null=True)  # Gujarati text
+    about_values = models.JSONField(blank=True, null=True)  # list of value dicts [{icon, title_en, title_gu}]
+    
+    def __str__(self):
+        return self.company_name
 
     class Meta:
-        ordering = ["-submitted_at"]
-        verbose_name = "Post-event Feedback"
-        verbose_name_plural = "Post-event Feedbacks"
+        verbose_name = "Site Information"
+        verbose_name_plural = "Site Information"
+
+
+
+
+
+
+class ContactMessage(models.Model):
+    name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)  # Use max_length according to your format
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        who = self.contact.full_name if self.contact else "Anonymous"
-        return f"Post-event feedback by {who} for {self.event}"
+        return f"{self.name} - {self.phone}"
+    
+
+
+
+class PreFeedback(models.Model):
+    name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
+    expectations = models.TextField(blank=True)  # JSON string or comma-separated
+    additional_message = models.TextField(blank=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.phone})"
+    
+
+class PostFeedback(models.Model):
+    name = models.CharField(max_length=150)
+    phone = models.CharField(max_length=20)
+
+    rating = models.IntegerField(choices=[(1, "1 ⭐"), (2, "2 ⭐"), (3, "3 ⭐"), (4, "4 ⭐"), (5, "5 ⭐")])
+    liked_most = models.TextField(blank=True, null=True)
+    improvements = models.TextField(blank=True, null=True)
+    additional_message = models.TextField(blank=True, null=True)
+
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.rating} Stars"

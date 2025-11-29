@@ -12,9 +12,18 @@
     <p class="lead mb-4">
       Celebrate unity, culture, and joy! Stay updated with upcoming village events and share your feedback.
     </p>
-    <a href="{% url 'login' %}" class="btn btn-light btn-lg px-4 py-2 rounded-pill fw-semibold shadow-sm">
-      Join the Celebration
-    </a>
+
+    {% if details_url %}
+        <a href="{{ details_url }}" 
+           class="btn btn-warning px-4 py-2 rounded-pill fw-semibold shadow-sm text-dark">
+            {{ button_text }}
+        </a>
+    {% else %}
+        <a href="{% url 'login' %}?next={{ request.path }}" 
+           class="btn btn-outline-warning px-4 py-2 rounded-pill fw-semibold shadow-sm">
+            Login to Register
+        </a>
+    {% endif %}
   </div>
 </section>
 
@@ -35,89 +44,70 @@
       <!-- Right Details -->
       <div class="col-md-7 p-4 p-md-5"
            style="background: linear-gradient(135deg, #1c1c2e, #2c2c44); color: #f1f1f1;">
-        <h4 class="fw-bold text-warning mb-3">Village Heritage Festival 2025</h4>
+
+        <h4 class="fw-bold text-warning mb-3">{{ event.title }}</h4>
         <p class="text-light mb-3" style="opacity: 0.85;">
-          Experience the heart of Hirapura with traditional performances, crafts, food stalls, and a grand evening
-          celebration under the stars.
+          {{ event.description|default:"Experience the heart of Hirapura with traditional performances, crafts, food stalls, and celebration under the stars." }}
         </p>
+
         <ul class="list-unstyled mb-4" style="color: #d1d1d1; font-weight: 500;">
-          <li>📅 <strong>Date:</strong> December 25, 2025</li>
-          <li>🕕 <strong>Time:</strong> 6 PM onwards</li>
-          <li>📍 <strong>Venue:</strong> Hirapura Community Ground</li>
+          <li>📅 <strong>Date:</strong> {{ event.date }}</li>
+          <li>🕕 <strong>Time:</strong> {{ event.time|time:"g:i A" }}</li>
+          <li>📍 <strong>Venue:</strong> {{ event.place }}</li>
         </ul>
 
-        {% if request.session.contact_id %}
-        <a href="{% url 'register_event' 1 %}" 
-           class="btn btn-warning px-4 py-2 rounded-pill fw-semibold shadow-sm text-dark">
-           Register Now
-        </a>
+        {% if details_url %}
+            <a href="{{ details_url }}" 
+               class="btn btn-warning px-4 py-2 rounded-pill fw-semibold shadow-sm text-dark">
+                {{ button_text }}
+            </a>
         {% else %}
-        <a href="{% url 'login' %}?next={% url 'register_event' 1 %}" 
-           class="btn btn-outline-warning px-4 py-2 rounded-pill fw-semibold shadow-sm">
-           Login to Register
-        </a>
+            <a href="{% url 'login' %}?next={{ request.path }}" 
+               class="btn btn-outline-warning px-4 py-2 rounded-pill fw-semibold shadow-sm">
+                Login to Register
+            </a>
         {% endif %}
+
       </div>
     </div>
   </div>
 </section>
 
-
-<!-- Upcoming Events (Keep commented)
-<section class="container mt-5">
-  ...
-</section> -->
-
-<!-- Gallery (Keep commented)
-<section class="container mt-5">
-  ...
-</section> -->
-
-<!-- Feedback CTA -->
+<!-- Feedback -->
 <section class="text-center mt-5 py-5"
   style="background: linear-gradient(135deg, #094e15, #acf7a5); color: white; border-radius: 12px;">
   <div class="container">
     <h2 class="fw-bold mb-3">💬 We Value Your Feedback</h2>
     <p class="mb-4">Help us improve future events by sharing your valuable suggestions.</p>
-    <a href="{% url 'pre_feedback' %}" class="btn btn-light btn-lg rounded-pill fw-semibold shadow-sm">
-      Share Feedback
-    </a>
+
+    {% if request.session.contact_id %}
+        <a href="{% url 'pre_feedback'%}" class="btn btn-light btn-lg rounded-pill fw-semibold shadow-sm">
+          Share Feedback
+        </a>
+    {% else %}
+        <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-light btn-lg rounded-pill fw-semibold shadow-sm">
+          Login to Share Feedback
+        </a>
+    {% endif %}
   </div>
 </section>
 
-<!-- Styles -->
+<!-- Card Hover Styles -->
 <style>
-  /* Stretch card responsiveness and hover feel */
   .event-stretch-card {
     transition: transform 0.4s ease, box-shadow 0.4s ease;
-    background: #ffffff;
   }
-
   .event-stretch-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
   }
-
-  /* Adjust left image height and fit */
   .event-stretch-card img {
     object-fit: cover;
     height: 100%;
     transition: transform 0.5s ease;
   }
-
   .event-stretch-card:hover img {
     transform: scale(1.05);
-  }
-
-  /* Responsive stacking */
-  @media (max-width: 768px) {
-    .event-stretch-card .col-md-5 {
-      height: 220px;
-    }
-
-    .event-stretch-card img {
-      border-bottom: 2px solid #eee;
-    }
   }
 </style>
 

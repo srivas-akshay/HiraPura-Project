@@ -1,8 +1,128 @@
 {% extends "base.html" %}
-
-{% block title %}Pre-Event Feedback{% endblock %}
+{% block title %}Pre-Event Feedback | {{ site_info.company_name }}{% endblock %}
 
 {% block content %}
-<h2>Pre-Event Feedback Page</h2>
-<p>Content goes here...</p>
+<section class="container my-5" style="max-width: 900px;">
+    <div class="feedback-card p-5">
+        <h2 class="fw-bold mb-3 text-accent">Pre-Event Feedback</h2>
+        <p class="mb-4 text-soft fs-6">Help us tailor the event to your expectations. Select your interests and share
+            your thoughts!</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Name & Phone -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <label class="label">Full Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="label">Phone Number</label>
+                    <input type="text" name="phone" class="form-control" placeholder="1112223334" required>
+                </div>
+            </div>
+
+            <!-- Expectations -->
+            <div class="mb-4">
+                <label class="label">Your Expectations / Interests</label>
+                <div class="d-flex flex-wrap gap-3 mt-2">
+                    {% for option in expectations_options %}
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="expectations" value="{{ option }}"
+                            id="{{ option|slugify }}">
+                        <label class="form-check-label text-light" for="{{ option|slugify }}">{{ option }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Additional Message -->
+            <div class="mb-4">
+                <label class="label">Additional Message</label>
+                <textarea name="additional_message" class="form-control" rows="4"
+                    placeholder="Any other expectations or suggestions..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-glow fw-semibold w-100 py-2 mt-2">Submit Feedback</button>
+        </form>
+    </div>
+</section>
+
+<style>
+    .feedback-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 50px 35px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        border-left: 5px solid #00c896;
+    }
+
+    .feedback-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .text-accent {
+        color: #00e6aa;
+        letter-spacing: 0.5px;
+        font-size: 1.75rem;
+    }
+
+    .text-soft {
+        color: #cfe7e3;
+    }
+
+    .label {
+        font-weight: 600;
+        color: #dffdf6;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 15px;
+        padding: 12px 15px;
+        color: #fff;
+        transition: all 0.25s;
+    }
+
+    .form-control::placeholder {
+        color: #cfe7e3;
+        opacity: 0.75;
+    }
+
+    .form-control:focus {
+        border-color: #00d6a0;
+        box-shadow: 0 0 12px rgba(0, 214, 160, 0.4);
+    }
+
+    .btn-glow {
+        background: #00c896;
+        border: none;
+        border-radius: 30px;
+        color: #fff;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-glow:hover {
+        background: #009f75;
+        box-shadow: 0 0 20px rgba(0, 200, 150, 0.6);
+    }
+
+    .form-check-label {
+        color: #e0f7f3;
+        font-weight: 500;
+    }
+
+    @media (max-width: 991px) {
+        .d-flex.flex-wrap.gap-3 {
+            flex-direction: column;
+        }
+    }
+</style>
 {% endblock %}

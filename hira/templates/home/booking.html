@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}Event Booking | Hirapura Event Portal{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<section class="booking-section" style="
+        min-height: 100vh; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        background: linear-gradient(160deg, #307a62, #02421f); 
+        padding: 50px 20px;
+    ">
+    
+    <div class="booking-card" style="
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1000px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        ">
+        
+        <!-- Left: Event Image -->
+        <div style="flex: 1 1 50%; min-width: 300px; position: relative;">
+            <a href="{% static 'home/invitation.png' %}" download>
+                <img src="{% static 'home/invitation.png' %}" alt="Event Invitation"
+                     style="width: 100%; height: 100%; object-fit: cover; display: block;">
+            </a>
+        </div>
+        
+        <!-- Right: Form + Event Info -->
+        <div style="flex: 1 1 50%; min-width: 300px; padding: 40px; color: #f0f0f0;">
+            
+           
+
+            <!-- Event Details -->
+            <div style="margin-bottom: 30px; padding: 20px; border-radius: 12px; background: rgba(226, 141, 141, 0.08); box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);">
+                <h4 class="fw-semibold mb-2">{{ event.title }}</h4>
+                <p class="mb-1"><strong>Date:</strong> {{ event.date }}</p>
+                <p class="mb-1"><strong>Time:</strong> {{ event.time }}</p>
+                <p class="mb-1"><strong>Venue:</strong> {{ event.place }}</p>
+                <p class="mb-0"><strong>Admin Contact:</strong> {{ event.admin_name }} | {{ event.admin_phone }}</p>
+            </div>
+
+            <!-- Booking Form -->
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="name" class="form-label fw-semibold">Full Name</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                           value="{{ contact.full_name }}" required
+                           style="border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 10px;">
+                </div>
+
+                <div class="mb-3">
+                    <label for="phone" class="form-label fw-semibold">Phone Number</label>
+                    <input type="text" class="form-control" id="phone" name="phone"
+                           value="{{ contact.whatsapp_no }}" required
+                           style="border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 10px;">
+                </div>
+
+                <div class="mb-3">
+                    <label for="people_count" class="form-label fw-semibold">Number of People</label>
+                    <input type="number" class="form-control" id="people_count" name="people_count"
+                           min="1" value="1" required
+                           style="border-radius: 10px; background: rgba(255,255,255,0.1); color: #fff; border: none; padding: 10px;">
+                </div>
+
+                {% if contact.vip %}
+                    <div class="d-grid mt-3">
+                        <button type="submit" class="btn fw-semibold py-2"
+                                style="background: linear-gradient(90deg, #2b7a0b, #4caf50); color: #fff; border-radius: 12px;">
+                            Confirm Booking
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="mb-4 p-3 mt-3" 
+                         style="background: rgba(255,255,255,0.08); border-radius: 12px; box-shadow: inset 0 2px 8px rgba(0,0,0,0.2);">
+                        <p class="fw-semibold mb-0">Rate per person: ₹60</p>
+                        <p class="fw-semibold mb-0">Amount to Pay: ₹<span id="total_amount">60</span></p>
+                    </div>
+                    <div class="d-grid mt-2">
+                        <button type="submit" class="btn fw-semibold py-2"
+                                style="background: linear-gradient(90deg, rgba(0,255,175,0.4), rgba(0,255,175,0.4)); color: #fff; border-radius: 12px;">
+                            Proceed to Pay
+                        </button>
+                    </div>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</section>
+
+{% if not contact.vip %}
+<script>
+    const peopleInput = document.getElementById('people_count');
+    const totalAmount = document.getElementById('total_amount');
+    const rate = 60;
+
+    peopleInput.addEventListener('input', () => {
+        let count = parseInt(peopleInput.value) || 1;
+        totalAmount.textContent = count * rate;
+    });
+</script>
+{% endif %}
+
+<style>
+    @media (max-width: 992px) {
+        .booking-card {
+            flex-direction: column !important;
+        }
+        .booking-card img {
+            height: auto !important;
+        }
+    }
+</style>
+
+{% endblock %}

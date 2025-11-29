@@ -1,1 +1,155 @@
-{% extends "base.html " %}
+{% extends "base.html" %}
+{% block title %}Post-Event Feedback | {{ site_info.company_name }}{% endblock %}
+
+{% block content %}
+<section class="container my-5" style="max-width: 1000px;">
+    <div class="feedback-card p-5">
+
+        <h2 class="fw-bold mb-3 text-accent">Post-Event Feedback</h2>
+        <p class="mb-4 text-soft fs-6">
+            Share your experience. Your feedback helps us improve future events.
+        </p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="row">
+                
+                <!-- LEFT COLUMN -->
+                <div class="col-lg-6 pe-lg-4">
+
+                    <!-- Name -->
+                    <div class="mb-4">
+                        <label class="label">Full Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="Your Name" required>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="mb-4">
+                        <label class="label">Phone Number</label>
+                        <input type="text" name="phone" class="form-control" placeholder="1112223334" required>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="mb-4">
+                        <label class="label">Overall Rating</label>
+                        <select name="rating" class="form-control" required>
+                            <option value="">Select rating...</option>
+                            <option value="5">⭐ 5 - Excellent</option>
+                            <option value="4">⭐ 4 - Very Good</option>
+                            <option value="3">⭐ 3 - Average</option>
+                            <option value="2">⭐ 2 - Below Average</option>
+                            <option value="1">⭐ 1 - Poor</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="col-lg-6 ps-lg-4">
+
+                    <div class="mb-3">
+                        <label class="label">What Did You Like the Most?</label>
+                        <textarea name="liked_most" class="form-control" rows="3"
+                            placeholder="Share what stood out the most..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="label">What Could Be Improved?</label>
+                        <textarea name="improvements" class="form-control" rows="3"
+                            placeholder="Tell us what can be better next time..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="label">Additional Comments</label>
+                        <textarea name="additional_message" class="form-control" rows="3"
+                            placeholder="Any other thoughts or suggestions..."></textarea>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-glow fw-semibold w-100 py-2 mt-4">Submit Feedback</button>
+        </form>
+
+    </div>
+</section>
+
+<style>
+    .feedback-card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(25px);
+    border-radius: 25px;
+    padding: 50px 35px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    transition: all 0.3s ease;
+    border-left: none !important;
+}
+
+    .feedback-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 35px 70px rgba(0, 0, 0, 0.45);
+    }
+
+    .text-accent {
+        color: #00ffd0;
+        letter-spacing: .5px;
+        font-size: 1.8rem;
+    }
+
+    .text-soft {
+        color: #d4f7ee;
+    }
+
+    .label {
+        font-weight: 600;
+        color: #e0fff7;
+        margin-bottom: 6px;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 15px;
+        padding: 12px 15px;
+        color: #fff;
+        transition: all .25s;
+    }
+
+    .form-control::placeholder {
+        color: #cfe7e3;
+        opacity: 0.75;
+    }
+
+    .form-control:focus {
+        border-color: #00d6a0;
+        box-shadow: 0 0 12px rgba(0, 214, 160, 0.5);
+    }
+
+    .btn-glow {
+        background: #00c896;
+        border: none;
+        border-radius: 30px;
+        color: #fff;
+        font-weight: 600;
+        transition: all .3s ease;
+    }
+
+    .btn-glow:hover {
+        background: #009f75;
+        box-shadow: 0 0 20px rgba(0, 200, 150, 0.7);
+    }
+
+    .form-check-label {
+        color: #e0f7f3;
+        font-weight: 500;
+    }
+
+    @media (max-width: 992px) {
+        .feedback-card {
+            padding: 40px 25px;
+        }
+    }
+</style>
+{% endblock %}

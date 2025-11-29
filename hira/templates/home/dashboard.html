@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Hirapura Event Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4 text-accent">Hello, {{ contact.name }}</h2>
+
+    <!-- User Details -->
+    <div class="card mb-4 p-3">
+        <h5>User Details</h5>
+        <p><strong>Name:</strong> {{ contact.name }}</p>
+        <p><strong>Phone:</strong> {{ contact.phone }}</p>
+        <p><strong>Email:</strong> {{ contact.email }}</p>
+    </div>
+
+    <!-- Booked Events -->
+    <div class="card p-3">
+        <h5>Your Bookings</h5>
+        {% if bookings %}
+            <table class="table table-dark table-striped mt-2">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Date</th>
+                        <th>People Count</th>
+                        <th>Amount Paid</th>
+                        <th>Payment Status</th>
+                        <th>Receipt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                        <tr>
+                            <td>{{ booking.event.title }}</td>
+                            <td>{{ booking.event.date }}</td>
+                            <td>{{ booking.people_count }}</td>
+                            <td>₹{{ booking.amount_paid }}</td>
+                            <td>{{ booking.payment_status }}</td>
+                            <td>
+                                <!-- Placeholder for receipt download -->
+                                <button class="btn btn-sm btn-outline-light" disabled>Download</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You have not booked any events yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.text-accent {
+    color: #00ffd0;
+}
+.card {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border-radius: 15px;
+}
+</style>
+{% endblock %}

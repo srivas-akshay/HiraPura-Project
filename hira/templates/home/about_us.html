@@ -1,8 +1,87 @@
 {% extends "base.html" %}
-
-{% block title %}About Us {% endblock %}
+{% block title %}About Us | {{ site_info.company_name }}{% endblock %}
 
 {% block content %}
-<h2>About Us</h2>
-<p>Content goes here...</p>
+<section class="container my-5">
+    <div class="about-card mx-auto p-5">
+        <!-- Title -->
+        <h2 class="fw-bold mb-4 text-accent">{{ site_info.about_title_en }}</h2>
+        
+        <!-- About Text EN -->
+        <p class="about-text">{{ site_info.about_text_en|linebreaks }}</p>
+        
+        <!-- About Text GU -->
+        {% if site_info.about_text_gu %}
+        <p class="about-text-gu">{{ site_info.about_text_gu|linebreaks }}</p>
+        {% endif %}
+        
+        <!-- Values Section -->
+        {% if site_info.about_values %}
+        <h5 class="fw-semibold mt-4 text-accent">Our Values / અમારી મૂલ્યો</h5>
+        <ul class="about-values">
+            {% for value in site_info.about_values %}
+            <li>
+                <strong>{{ value.title_en }}</strong> / <span class="gujarati">{{ value.title_gu }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</section>
+
+<style>
+/* Glassmorphism card */
+.about-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 50px;
+    max-width: 900px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    color: #f1f1f1;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+}
+
+/* Accent Color for titles */
+.text-accent {
+    color: #00c896;
+}
+
+/* Main about text styling */
+.about-text, .about-text-gu {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #e0f2f1;
+}
+
+/* Gujarati font */
+.gujarati {
+    font-family: 'Noto Sans Gujarati', 'Roboto', sans-serif;
+}
+
+/* Values list styling */
+.about-values {
+    list-style-type: disc;
+    padding-left: 20px;
+    color: #b7e4c7;
+    margin-top: 15px;
+}
+
+.about-values li {
+    margin-bottom: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 991px) {
+    .about-card {
+        padding: 30px;
+    }
+}
+</style>
 {% endblock %}
