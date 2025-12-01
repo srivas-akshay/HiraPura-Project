@@ -241,39 +241,51 @@ def home_view(request):
 # CONTACT & ABOUT VIEWS
 # -----------------------------------------
 
-
 def contact_us_view(request):
-    site_info = SiteInfo.objects.first()
+    site_info = SiteInfo.objects.first()  # Get site info; ensure this always exists
 
     if request.method == "POST":
-        name = request.POST.get("name")
-        phone = request.POST.get("phone")
-        message_text = request.POST.get("message")
+        name = request.POST.get("name", "").strip()
+        phone = request.POST.get("phone", "").strip()
+        message_text = request.POST.get("message", "").strip()
+
+        if not name or not message_text:
+            messages.error(request, "Name and message are required.")
+            return redirect("contact_us")
 
         # Save in DB
-        ContactMessage.objects.create(name=name, phone=phone, message=message_text)
-
-        # Send email notification to admin
-        subject = f"New Contact Message from {name}"
-        message_body = f"""
-        Name: {name}
-        Phone: {phone}
-        Message: {message_text}
-        """
-        admin_email = site_info.email  # or any admin email
-        send_mail(
-            subject,
-            message_body,
-            settings.DEFAULT_FROM_EMAIL,
-            [admin_email],
-            fail_silently=False,
+        ContactMessage.objects.create(
+            name=name,
+            phone=phone,
+            message=message_text
         )
 
-        messages.success(request, "Your message has been received. Thank you for reaching out. Our team will get back to you shortly — તમારો સંદેશ પ્રાપ્ત થયો છે. સંપર્ક કરવા બદલ આભાર. અમારી ટીમ ટૂંક સમયમાં તમને સંપર્ક કરશે.")
+        # Prepare email
+        subject = f"New Contact Message from {name}"
+        message_body = f"Name: {name}\nPhone: {phone}\nMessage: {message_text}"
+        admin_email = site_info.email if site_info else settings.DEFAULT_FROM_EMAIL
+
+        try:
+            send_mail(
+                subject,
+                message_body,
+                settings.DEFAULT_FROM_EMAIL,
+                [admin_email],
+                fail_silently=False,
+            )
+        except Exception as e:
+            # Log or handle email errors
+            messages.error(request, f"Message saved, but failed to send email: {e}")
+            return redirect("contact_us")
+
+        messages.success(
+            request,
+            "Your message has been received. Thank you for reaching out. "
+            "Our team will get back to you shortly — તમારો સંદેશ પ્રાપ્ત થયો છે. સંપર્ક કરવા બદલ આભાર. અમારી ટીમ ટૂંક સમયમાં તમને સંપર્ક કરશે."
+        )
         return redirect("contact_us")
 
     return render(request, "home/contact_us.html", {"site_info": site_info})
-
 
 
 

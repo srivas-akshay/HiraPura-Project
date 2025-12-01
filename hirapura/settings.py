@@ -34,8 +34,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-ALLOWED_HOSTS = ['*']  # for now; we will restrict to your domain later
-DEBUG = True          # in production
+ALLOWED_HOSTS = ['hirapura.org', 'www.hirapura.org', '143.244.130.43']
+
+DEBUG = False         # in production
 
 
 # Application definition
